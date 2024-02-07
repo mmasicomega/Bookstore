@@ -83,8 +83,6 @@ Module Bookstore
     {
         Reference Department { Required; }
         Reference Employee { Required; }
-
-        UniqueMultiple 'Department Employee';
     }
 
 }
