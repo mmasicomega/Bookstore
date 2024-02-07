@@ -2,10 +2,14 @@ Module Bookstore
 {
     Entity Book
     {
-        ShortString Code { Unique; Required; }
+        ShortString Code { AutoCode; DefaultValue 'item => "BID+++++++"'; DenyUserEdit; }
         ShortString Title { Required; }
-        Integer NumberOfPages;
+        Integer NumberOfPages { MaxValue 5000; MinValue 1; }
         Reference Author Bookstore.Person;
+
+        DateTime TimeCreated { CreationTime; }
+
+        Logging { AllProperties; }
     }
 
     Entity Person
@@ -17,6 +21,8 @@ Module Bookstore
     {
         Reference Book { Detail; }
         LongString Text;
+        DateTime TimeModified { ModificationTimeOf Bookstore.Comment.Text; }
+        Logging { Log Bookstore.Comment.Text; }
     }
 
     Entity ChildrensBook
@@ -77,6 +83,11 @@ Module Bookstore
     {
         ShortString Code { Unique; Required; }
         LongString Description;
+
+        Deactivatable;
+
+        ItemFilter ActiveLocked 'item => item.Active.Value';
+        Lock ActiveLocked 'Active departments cannot be edited.';
     }
 
     Entity DepartmentEmployee
@@ -86,5 +97,5 @@ Module Bookstore
 
         UniqueMultiple 'Department Employee';
     }
-
+    
 }
