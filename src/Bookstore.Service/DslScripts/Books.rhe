@@ -55,47 +55,4 @@ Module Bookstore
         UniqueMultiple 'Book Topic';
     }
 
-// ---------------------------------------------------------------
-
-    Entity Employee
-    {
-        ShortString Name;
-        ShortString VATNumber { Unique; Required; }
-    }
-
-    Entity Manager
-    {
-        Extends Bookstore.Employee;
-
-        LongString BonusInformation;
-    }
-
-    Entity EducationRecord
-    {
-        Reference Employee Bookstore.Employee;
-
-        Date DateAcquired;
-
-        LongString Description;
-    }
-
-    Entity Department
-    {
-        ShortString Code { Unique; Required; }
-        LongString Description;
-
-        Deactivatable;
-
-        ItemFilter ActiveLocked 'item => item.Active.Value';
-        Lock ActiveLocked 'Active departments cannot be edited.';
-    }
-
-    Entity DepartmentEmployee
-    {
-        Reference Department { Required; }
-        Reference Employee { Required; }
-
-        UniqueMultiple 'Department Employee';
-    }
-    
 }
