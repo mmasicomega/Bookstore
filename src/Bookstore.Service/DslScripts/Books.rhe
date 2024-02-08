@@ -7,6 +7,10 @@ Module Bookstore
         Integer NumberOfPages { MaxValue 5000; MinValue 1; }
         Reference Author Bookstore.Person;
 
+        
+        ItemFilter CommonMisspelling 'book => book.Title.Contains("curiousity")';
+        InvalidData CommonMisspelling 'It is not allowed to enter misspelled word "curiousity".';
+
         DateTime TimeCreated { CreationTime; }
 
         Logging { AllProperties; }
@@ -53,6 +57,27 @@ Module Bookstore
         Reference Topic { Required; }
 
         UniqueMultiple 'Book Topic';
+    }
+
+    Hardcoded Genre
+    {
+        ShortString Label;
+        LongString Description;
+        Bool IsFiction;
+
+        Entry ScienceFiction
+        {
+            Value Label 'Science fiction';
+            Value Description 'A speculative fiction with imagined elements that are inspired by natural sciences or social sciences.';
+            Value IsFiction 1;
+        }
+
+        Entry Biography
+        {
+            Value Label 'Biography';
+            Value Description 'A written narrative of a person''s life.';
+            Value IsFiction 0;
+        }
     }
 
 }
