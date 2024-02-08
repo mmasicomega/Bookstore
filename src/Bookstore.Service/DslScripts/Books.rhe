@@ -47,9 +47,9 @@ Module Bookstore
                 }
                 Book[] books = query.ToSimple().ToArray();
 
-                if (paramter.MaskTitles == true)
+                if (parameter.MaskTitles == true)
                 {
-                    foreach (var book in books.Where(b => != string.IsNullOrEmpty(b.Title)))
+                    foreach (var book in books.Where(b => !string.IsNullOrEmpty(b.Title)))
                     {
                         book.Title = book.Title.First() + "***" + book.Title.Last();
                     }
@@ -136,6 +136,25 @@ Module Bookstore
             Value Description 'A written narrative of a person''s life.';
             Value IsFiction 0;
         }
+    }
+
+    Entity Disposal
+    {
+        Reference Book { Required; }
+        LongString Explanation { Required; }
+        DateTime EffectiveSince { CreationTime; }
+
+        ItemFilter ImportantBookExplanation 'item => item.Book.Title.Contains("important") && item.Explanation.Length < 500';
+        InvalidData ImportantBookExplanation 'When disposing an important book, the explanation should be at least 50 characters long.';
+
+        ItemFilter HighRating 'item => item.Book.Extension_BookRating.Rating > 100';
+        InvalidData HighRating 'You are not allowed to dispose a book with rating above 100.';
+    }
+
+    Entity BookRating
+    {
+        Extends Bookstore.Book;
+        Decimal Rating;
     }
 
 }
