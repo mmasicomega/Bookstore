@@ -21,4 +21,8 @@
     <Folder Include="DslScripts\SQL\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RhetosExtensions\RhetosExtensions.csproj" />
+  </ItemGroup>
+
 </Project>

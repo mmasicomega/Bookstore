@@ -57,6 +57,10 @@ Module Bookstore
 
                 return books;
             }';
+
+
+            // Deactivatable { DeactivateOnDelete; }
+            
     }
 
     Parameter ComplexSearch
@@ -77,6 +81,8 @@ Module Bookstore
     Entity Person
     {
         ShortString Name;
+
+        DateTime dateOfBirth;
     }
 
     Entity Comment
@@ -155,6 +161,43 @@ Module Bookstore
     {
         Extends Bookstore.Book;
         Decimal Rating;
+    }
+
+    // ------------------------------------------------------------------------------------
+
+    Entity Review
+    {
+        Reference Book { Required; }
+        Integer Score { Required; MinValue 1; MaxValue 5; }
+        LongString Text;
+        DateTime LastModifiedTime;
+
+        SaveMethod
+        {
+            // ... Insert the examples from this tutorial here. ...
+            Initialization DefaultTextFromScore
+            '
+                foreach (var item in insertedNew)
+                    if (string.IsNullOrEmpty(item.Text) && item.Score != null)
+                        item.Text = item.Score.Value >= 3
+                            ? "I like it"
+                            : "I don''t like it";
+                
+                var currentTime = DateTime.Now;
+                foreach (var item in updatedNew) 
+                {
+                    item.LastModifiedTime = currentTime;
+                }
+            ';
+
+            LoadOldItems
+            {
+                Take Score;
+                Take 'Book.Title';
+            }
+
+            
+        }
     }
 
 }

@@ -77,4 +77,38 @@ Module Bookstore
 		Take NumberOfTopics 'Extension_BookTopicsInfo.NumberOfTopics';
 	}
 
+	SqlView AcomplishedAuthors
+		"
+			SELECT
+				a.ID,
+				a.Name,
+				a.DateOfBirth,
+				COUNT(b.ID) NumberOfBooks				
+			FROM 
+				Bookstore.Person a
+				LEFT JOIN Bookstore.Book b on b.AuthorID = a.ID
+			GROUP BY a.ID, a.Name, a.DateOfBirth
+			HAVING COUNT(b.ID) > 5;
+		"
+	{
+		AutodetectSqlDependencies;
+	}
+
+	SqlQueryable YoungAcomplishedAuthors
+		"
+			SELECT
+				aa.ID,
+				aa.Name,
+				aa.DateOfBirth,
+				aa.NumberOfBooks
+			FROM Bookstore.AcomplishedAuthors aa
+			WHERE aa.DateOfBirth <> NULL AND DATEDIFF(year, GETDATE(), aa.DateOfBirth) <= 30
+		"
+	{
+		AutodetectSqlDependencies;
+	}
+
+
+
+
 }
